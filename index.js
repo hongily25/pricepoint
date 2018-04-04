@@ -27,5 +27,26 @@ express()
       }
     };
 
+    function callback(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var info = JSON.parse(body);
+        console.log("Got a GET request for the homepage");
+        console.log('info: ', info.results);
+        if (info.results.length < 1) {
+            res.render('no-results');
+        }
+        var spaces = info.results;
+        function makeCoords(n) {
+            return { lat: n.lat, lng: n.lng, info: n.name }
+        }
+        var locations = _.map(spaces, makeCoords);
+        console.log(locations);
+        var names = _.map(spaces, 'name');
+        res.render('city', { reports: spaces, coords: locations, titles: names});
+      } else {
+          res.send('err')
+      }
+    }
+
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
