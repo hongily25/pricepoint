@@ -7,21 +7,24 @@
 
 <body>
   <% include ../partials/masthead.ejs %>
-    <div class="container">
+    <div class="row">
       <br>
-      <div class="container" style="max-width:700px">
-        <label>
-          <h4>To find a coworking space, type in a city below.</label>
-        <br>
-        <br>
-        <form action="/" method="GET">
-          <div class="form-inline">
-            <div class="form-group">
-              <input class="form-control" type="text" name="city" id="city">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+      <div class="container">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <h4>To find a coworking space, type in a city below.
+            <br>
+            <br>
+            <form action="/" method="GET">
+              <div class="form-inline">
+                <div class="form-group">
+                  <input class="form-control" type="text" name="city" id="city">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+        </div>
+        <div class="col-sm-2"></div>
       </div>
 
     </div>
