@@ -65,7 +65,6 @@ tbody>tr>td {
   color: #FFF;
   font-size: 24px;
   text-shadow: 2px 1px #666;
-  font-family: 'Franklin Gothic Light', 'Arial Narrow', Arial, sans-serif;
 }
 
 form {
@@ -78,6 +77,6 @@ form {
 .logo-head.container > a:visited {
   color: #FFF;
   text-decoration: none;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Lobster', cursive;
 }
 
