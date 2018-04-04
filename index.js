@@ -47,6 +47,7 @@ express()
           res.send('err')
       }
     }
+    request(options, callback); 
 
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
