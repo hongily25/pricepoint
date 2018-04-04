@@ -10,6 +10,12 @@ express()
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', function (req, res) {
-    res.send('hello emilia!')
+    var city = 'Lisbon';
+
+    if (req.query.city == null) {
+        res.render('pages/index', { reports: [] })
+    } else {
+        city = req.query.city;
+    }
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
