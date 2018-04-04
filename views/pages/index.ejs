@@ -4,19 +4,14 @@
   <% include ../partials/header.ejs %>
 </head>
 <body>
-      <div id="header">
-          <div class="inner-header container">
-            <div class="logo-head container"><a href="/">WORKSPACE SURFER</a></div>
-          
-          </div>
-        </div>
+    <% include ../partials/masthead.ejs %>
     <div class="container">
       <br>
         <div class="container" style="max-width:700px">
            <form action="/" method="GET">
           <div class="form-group">
             <label><h4>To find a coworking space, type in a city below.</label><br><br>
-            <input class="form-control" type="text" name="city" id="city"><br><br>
+            <input class="form-control" type="text" name="city" id="city"><br>
             <div style="text-align:center"><button type="submit" class="btn btn-primary">Submit</button></div>
           </div>
           
