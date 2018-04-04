@@ -36,10 +36,12 @@ express()
             res.render('pages/no-results');
         }
         var spaces = info.results;
+        
         function makeCoords(n) {
             return { lat: n.lat, lng: n.lng, info: n.name }
         }
         var locations = _.map(spaces, makeCoords);
+
         console.log(locations);
         var names = _.map(spaces, 'name');
         res.render('pages/city', { reports: spaces, coords: locations, titles: names});
