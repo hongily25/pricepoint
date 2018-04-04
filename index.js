@@ -1,9 +1,5 @@
 const express = require('express')
 const path = require('path')
-var session = require('express-session');
-var request = require('request');
-var _ = require('lodash');
-
 const PORT = process.env.PORT || 5000
 
 express()
