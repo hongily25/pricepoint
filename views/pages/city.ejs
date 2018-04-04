@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+      <div id="header">
+        <div class="inner-header container">
+          <div class="logo-head container">DOLPHIN WORK</div>
+        <img src="/images/emilylam.jpg">
+        </div>
+      </div>
+    <div class="container">
+    <br><br>
+    <div id="map"></div>
+    <br><br>
+
+      <% if (reports.length > 0) { %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="padding-left: 20px">Name</th>
+            <th>Location</th>
+            <th>Rating</th>
+            <th>Certified</th>
+            <th>Reserve a Booking</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let report of reports) { %>
+          <tr>
+            <th scope="row">
+                <%= report.name %><br>
+                <a href="<%= report.url %>"><img src="<%= report.picture_url %>" style="max-width:150px"></a>
+            </th>
+            <td><%= report.address %></td>
+            <td>
+                <% if (report.average_rating == null) { %>
+                    Not rated
+                <% } else { %>
+                    <%= report.average_rating %>
+                <% } %>
+            </td>
+            <td>
+                <% if (report.certified) { %>
+                    Yes
+                <% } else { %> 
+                    No
+                <% } %>
+            </td>
+            <td class="reserve">
+              <button class="btn btn-info">Reserve Now</button>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <% } %>
+
+    </div>
+     
+    <script>
+            function initMap() {
+      
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 5,
+                center: {lat: <%= reports[0].lat %>, lng: <%= reports[0].lng %>}
+              });
+      
+              // Create an array of alphabetical characters used to label the markers.
+              var labels = <%- JSON.stringify(titles) %>;
+              var infoWin = new google.maps.InfoWindow();
+      
+              // Add some markers to the map.
+              // Note: The code uses the JavaScript Array.prototype.map() method to
+              // create an array of markers based on a given "locations" array.
+              // The map() method here has nothing to do with the Google Maps API.
+              var markers = locations.map(function(location, i) {
+                var marker = new google.maps.Marker({
+                    position: location
+                })
+                google.maps.event.addListener(marker, 'click', function(evt) {
+                    infoWin.setContent(location.info);
+                    infoWin.open(map, marker);
+                })
+                return marker;
+              });
+      
+              // Add a marker clusterer to manage the markers.
+              var markerCluster = new MarkerClusterer(map, markers,
+                  {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+            }
+            
+            var locations = [ <% for (let i of reports) { %>
+                {
+                    lat: <%= i.lat %>,
+                    lng: <%= i.lng %>,
+                    info: "<strong> <%= i.name %> </strong> <br> <%= i.address %> <br> <a href='<%= i.url %>'> View Website</a>",
+                    maxWidth: 20
+                }, <% } %> ]
+            
+          </script>
+          <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+          </script>
+          <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzcJb41FFwvQeK0z_eLQV1RH5v7Ccpys&callback=initMap">
+          </script>
+  </body>
+  </html>

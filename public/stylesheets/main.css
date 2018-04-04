@@ -1,27 +1,69 @@
-.jumbotron {
-  background: #532F8C;
-  color: white;
-  padding-bottom: 80px; }
-  .jumbotron .btn-primary {
-    background: #845ac7;
-    border-color: #845ac7; }
-    .jumbotron .btn-primary:hover {
-      background: #7646c1; }
-  .jumbotron p {
-    color: #d9ccee;
-    max-width: 75%;
-    margin: 1em auto 2em; }
-  .navbar + .jumbotron {
-    margin-top: -20px; }
-  .jumbotron .lang-logo {
-    display: block;
-    background: #B01302;
-    border-radius: 50%;
-    overflow: hidden;
-    width: 100px;
-    height: 100px;
-    margin: auto;
-    border: 2px solid white; }
-    .jumbotron .lang-logo img {
-      max-width: 100%; }
+#map {
+  width: 100%;
+  height: 400px;
+  background-color: grey;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 3px 0px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
 
+#map a:focus,
+a:hover {
+  text-decoration: none !important
+}
+
+body {
+  background-image: url('/images/bg2.jpg');
+  background-size: cover;
+}
+
+table {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 3px 0px;
+  background-color: #FFF !important;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+tbody>tr>th {
+  padding-left: 20px !important;
+}
+
+tbody>tr>th>a>img {
+  border-radius: 4px;
+}
+
+.table>thead:first-child>tr:first-child>th {
+  font-size: 16px
+}
+
+.btn.btn-info {
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+}
+
+tbody>tr>td {
+  vertical-align: middle !important;
+}
+
+#header {
+  height: 70px;
+  background-color: #46b8da;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 2px 0px;
+}
+
+.inner-header {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: space-between;
+  padding-left: 0
+}
+
+.logo-head {
+  color: #FFF;
+  font-size: 24px;
+  text-shadow: 2px 1px #666;
+  font-family: 'Franklin Gothic Light', 'Arial Narrow', Arial, sans-serif;
+}
