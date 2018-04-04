@@ -17,5 +17,15 @@ express()
     } else {
         city = req.query.city;
     }
+
+    var options = {
+      url: 'https://card4b-masai-masai-coworkingcoffee-stg-v1.p.mashape.com/coworkingspace/api/discovery/getCoWorkingSpaces?City=' + city,
+      headers: {
+        'User-Agent': 'request',
+        'Content-Type': 'application/json',
+        'X-Mashape-Key': 'ShedIfdxswmsh7n7BWdKbLix2oxep1oKrryjsnl9MPWgR9vWwa'
+      }
+    };
+
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
