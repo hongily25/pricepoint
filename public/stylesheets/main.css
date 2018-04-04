@@ -78,5 +78,6 @@ form {
 .logo-head.container > a:visited {
   color: #FFF;
   text-decoration: none;
+  font-family: 'IBM Plex Sans', sans-serif;
 }
 
