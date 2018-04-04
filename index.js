@@ -33,7 +33,7 @@ express()
         console.log("Got a GET request for the homepage");
         console.log('info: ', info.results);
         if (info.results.length < 1) {
-            res.render('no-results');
+            res.render('pages/no-results');
         }
         var spaces = info.results;
         function makeCoords(n) {
@@ -42,7 +42,7 @@ express()
         var locations = _.map(spaces, makeCoords);
         console.log(locations);
         var names = _.map(spaces, 'name');
-        res.render('city', { reports: spaces, coords: locations, titles: names});
+        res.render('pages/city', { reports: spaces, coords: locations, titles: names});
       } else {
           res.send('err')
       }
