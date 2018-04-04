@@ -96,7 +96,7 @@
                 {
                     lat: <%= i.lat %>,
                     lng: <%= i.lng %>,
-                    info: "<strong> <%= i.name %> </strong> <br> <% i.address.replace(/\./g,' ') %> <br> <a href='<%= i.url %>'> View Website</a>",
+                    info: "<strong> <%= i.name %> </strong> <br> <% i.address.split('.').join(' '); %> <br> <a href='<%= i.url %>'> View Website</a>",
                     maxWidth: 20
                 }, <% } %> ]
             
