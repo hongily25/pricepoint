@@ -29,8 +29,7 @@ express()
 
     function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
-        var jsonObj = JSON.parse(body);
-        var info = JSON.stringify(jsonObj);
+        var info = JSON.parse(body);
         console.log("Got a GET request for the homepage");
         console.log('info: ', info.results);
         if (info.results.length < 1) {
