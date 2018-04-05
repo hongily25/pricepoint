@@ -119,7 +119,7 @@ express()
     }
 
     //request.post(options, callback);
-    res.send(req.body);
+    res.send(req.body.passengers);
 
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
