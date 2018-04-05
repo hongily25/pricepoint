@@ -52,4 +52,73 @@ express()
     request(options, callback); 
 
   })
+  .post('/availability', function (req, res) {
+    var options = {
+      url: 'https://sgrdapi.linksrez.net/api/v1/Ground/Availability',
+      headers: {
+        'Content-Type': 'application/json',
+        'Username': 'sandbox',
+        'Password': 'sandbox'
+      },
+      body: {
+          "Passengers": [
+              {
+                  "Quantity": 2,
+                  "Category": {
+                      "Value": "Adult"
+                  }
+              }
+          ],
+          "Service": {
+              "Pickup": {
+                  "DateTime": "04/12/2018 11:00 PM",
+                  "Address": {
+                      "AddressLine": "2543 N. 60th Ave",
+                      "CityName": "Phoenix",
+                      "PostalCode": "85035",
+                      "LocationType": {
+                          "Value": "HomeResidence"
+                      },
+                      "StateProv": {
+                          "StateCode": "AZ"
+                      },
+                      "CountryName": {
+                          "Code": "US"
+                      },
+                      "Latitude": "33.475609",
+                      "Longitude": "-112.188570"
+                  }
+              },
+              "Dropoff": {
+                  "Address": {
+                      "AddressLine": "2543 N. 60th Ave",
+                      "CityName": "Phoenix",
+                      "PostalCode": "85035",
+                      "LocationType": {
+                          "Value": "HomeResidence"
+                      },
+                      "StateProv": {
+                          "StateCode": "AZ"
+                      },
+                      "CountryName": {
+                          "Code": "US"
+                      },
+                      "Latitude": "33.475609",
+                      "Longitude": "-112.188570"
+                  }
+              }
+          }
+      }      
+    };
+
+    function callback(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var info = JSON.parse(body);
+        res.send(info);
+      }
+    }
+
+    request.post(options, callback);
+
+  })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
