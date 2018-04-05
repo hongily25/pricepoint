@@ -50,17 +50,17 @@
               <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Reserve Now</button></a>
             </td>
             <td>
-                <form action="/availabilty" method="POST">
+                <form action="/availability" method="POST">
                 
-                Passengers: <select class="form-control">
-                    <option>1</option>
-                    <option>2</option>
+                <label for="passengers">Passengers:</label> <select class="form-control">
+                    <option name="passengers" value="1">1</option>
+                    <option  name="passengers" value="2">2</option>
                 </select>
-                Date of Travel: 
+                <label for="date">Date of Travel: </label>
                 <select class="form-control">
-                    <option>April 4</option>
+                    <option name="date" value="April 4">April 4</option>
                 </select>
-                <button type="submit">Request Service</button>
+                <button type="submit" class="form-control">Request Service</button>
                 </form>
             </td>
           </tr>
