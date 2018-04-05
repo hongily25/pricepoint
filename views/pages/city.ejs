@@ -30,7 +30,7 @@
                 <%= report.name %><br>
                 <a href="<%= report.url %>"><img src="<%= report.picture_url %>" style="max-width:150px"></a>
             </th>
-            <td><%= report.address %></td>
+            <td style="max-width:350px"><%= report.address %></td>
             <td>
                 <% if (report.average_rating == null) { %>
                     Not rated
@@ -92,7 +92,7 @@
                 {
                     lat: <%= i.lat %>,
                     lng: <%= i.lng %>,
-                    info: "<strong> <%= i.name %> </strong> <br> <%- i.address.replace(/[\W_]/g, '') %> <br> <a href='<%= i.url %>'> View Website</a>",
+                    info: "<strong> <%= i.name %> </strong> <br> <%- i.address.replace(/[\W_]/g, ' ') %> <br> <a href='<%= i.url %>'> View Website</a>",
                     maxWidth: 20
                 }, <% } %> ]
             
