@@ -49,7 +49,7 @@
             <td class="reserve">
               <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Reserve Now</button></a>
             </td>
-            <td>
+            <td style="padding:20px">
                 <form action="/availability" method="POST">
                 
                 <label for="passengers">Passengers:</label> <select class="form-control">
@@ -60,7 +60,8 @@
                 <select class="form-control">
                     <option name="date" value="April 4">April 4</option>
                 </select>
-                <button type="submit" class="form-control">Request Service</button>
+                <br><br>
+                <button type="submit" class="form-control btn btn-info">Request Service</button>
                 </form>
             </td>
           </tr>
