@@ -113,8 +113,8 @@ express()
 
     function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
-        res.send(req.body);
+        var info = JSON.parse(req.body);
+        res.send(info);
       } else {
         res.send(error);
       }
