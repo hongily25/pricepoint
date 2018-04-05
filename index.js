@@ -115,11 +115,13 @@ express()
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         res.send(info);
+      } else {
+        res.send('got an error');
       }
     }
 
     //request.post(options, callback);
-    res.send(req.body.passengers);
+
 
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
