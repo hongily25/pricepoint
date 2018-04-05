@@ -60,7 +60,7 @@ express()
         'Username': 'sandbox',
         'Password': 'sandbox'
       },
-      body: {
+      body: JSON.stringify({
           "Passengers": [
               {
                   "Quantity": 2,
@@ -108,7 +108,7 @@ express()
                   }
               }
           }
-      }      
+      })      
     };
 
     function callback(error, response, body) {
@@ -116,7 +116,7 @@ express()
         var info = JSON.parse(body);
         res.send(info);
       } else {
-        res.send('got an error');
+        res.send(error);
       }
     }
 
