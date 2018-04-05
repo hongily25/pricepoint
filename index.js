@@ -114,7 +114,7 @@ express()
     function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
-        res.send(info);
+        res.send(req.body);
       } else {
         res.send(error);
       }
