@@ -118,7 +118,8 @@ express()
       }
     }
 
-    request.post(options, callback);
+    //request.post(options, callback);
+    res.send(req.body);
 
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
