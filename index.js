@@ -147,10 +147,10 @@ express()
     request.post(options, function callback(error, response, body) {
 
       if (!error && response.statusCode == 200) {
-        var info; 
+        var info = JSON.parse(body);
         
         try {
-            info = JSON.parse(body);
+            var superShuttleExists = info.data.SuperShuttle[0];
         } catch(error) {
             return res.send('error :(')
         }
