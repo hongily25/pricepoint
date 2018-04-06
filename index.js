@@ -35,7 +35,7 @@ express()
         var info = JSON.parse(body);
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
-        if (info.results.length < 1) {
+        if (info.results == null) {
             res.render('pages/no-results');
         }
         var spaces = info.results;
@@ -56,27 +56,28 @@ express()
 
   })
   .post('/availability', function (req, res) {
-    console.log('req.body: ', req.body);
+    //console.log('req.body: ', req.body);
+    console.log('req.query.city', req.query.city);
 
     var passengers, coworklat, coworklng, date, useraddress, userzipcode; 
 
-    if(req.body.Passengers > 0) {
+    if(req.body.Passengers) {
       passengers = req.body.Passengers
     } else passengers = "1";
 
-    if(req.body.coworklat > 0) {
+    if(req.body.coworklat) {
       coworklat = req.body.coworklat
     } else coworklat = "33.9811714";
 
-    if(req.body.coworklng > 0) {
+    if(req.body.coworklng) {
       coworklng = req.body.coworklng
     } else coworklng = "-118.4157892";
 
-    if(req.body.useraddress > 0) {
+    if(req.body.useraddress) {
       useraddress = req.body.useraddress;
     } else useraddress = "1875 Century Park East"
 
-    if(req.body.userzipcode.length > 0) {
+    if(req.body.userzipcode) {
       userzipcode = req.body.zipcode;
     } else userzipcode = "90067"
 
@@ -140,7 +141,36 @@ express()
 
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
-        res.send(info);
+        var img = "https:" + info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.ImageURL;
+        console.log('this is my info. ', img);
+        var rideInfo = info.data.SuperShuttle[0].RateQualifiers[0].RateQualifierValue;
+
+        var startDateRideInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.PickupTimes.PickupTimes[0].StartDateTime;
+
+        var startDateRideInfoArray = Array.from(startDateRideInfo);
+        startDateRideInfoArray.splice(9, 0, ' at ');
+
+        startDateRideInfoArray.splice(13, 3, '');
+
+        startDateRideInfoArray.splice(16, 0, ' ');
+        startDateRideInfo = startDateRideInfoArray.join('');
+
+        var costInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].TotalCharge.EstimatedTotalAmount;
+
+        var descInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].RateQualifier.Category.Description;
+
+        var descInfoArray = Array.from(descInfo);
+        descInfoArray.splice(8, 0, ' ');
+        descInfo = descInfoArray.join('');
+
+        var maxPassengers = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.MaxPassengers;
+
+        var serviceLevelCodeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.ServiceLevel.Code;
+
+        var vehicleTypeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.VehicleType.Code;
+
+        
+        res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
       } else {
         res.send(error);
       }
