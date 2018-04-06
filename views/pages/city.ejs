@@ -1,122 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% include ../partials/header.ejs %>
+<% include ../partials/header.ejs %>
 </head>
 
 <body>
-    <% include ../partials/masthead.ejs %>
+<% include ../partials/masthead.ejs %>
 
-    <div class="container">
+<div class="container">
     <br><br>
     <div id="map"></div>
     <br><br>
-
-      <% if (reports.length > 0) { %>
-      <table class="table">
-        <thead>
-          <tr>
-            <th style="padding-left: 20px">Name</th>
-            <th>Location</th>
-            <th>Rating</th>
-            <th>Certified</th>
-            <th>Reserve a Meeting Space</th>
-            <th>Book Travel Service</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (let report of reports) { %>
-          <tr>
-            <th scope="row">
-                <%= report.name %><br>
-                <a href="<%= report.url %>"><img src="<%= report.picture_url %>" style="max-width:150px"></a>
-            </th>
-            <td style="max-width:350px"><%= report.address %></td>
-            <td>
-                <% if (report.average_rating == null) { %>
-                    Not rated
-                <% } else { %>
-                    <%= report.average_rating %>
-                <% } %>
-            </td>
-            <td>
-                <% if (report.certified) { %>
-                    Yes
-                <% } else { %> 
-                    No
-                <% } %>
-            </td>
-            <td class="reserve">
-              <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Reserve Now</button></a>
-            </td>
-            <td style="padding:20px">
-                <form action="/availability" enctype="multipart/form-data" method="POST">
-                
-                <label for="passengers">Passengers:</label> <select class="form-control">
-                    <option name="passengers" value="1">1</option>
-                    <option name="passengers" value="2">2</option>
-                </select>
-                <label for="date">Date of Travel: </label>
-                <select class="form-control">
-                    <option name="date" value="April 4">April 4</option>
-                </select>
-                <br>
-                <button type="submit" class="btn form-control btn-info">Request Service</button>
-                </form>
-            </td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
-      <% } %>
-
+<% if (reports.length > 0) { %>
+<table class="table">
+    <tbody>
+    <% for (let report of reports) { %>
+    <tr>
+    <td scope="row" style="width:200px; padding-left: 90px;">
+        <div class="coworking-space" style="padding:20px">
+            <div class="title-and-img" style="max-width:300px">
+                <div class="coworking-title" style="font-size: 20px;text-align:center;margin-bottom:10px"><%= report.name %>
+                </div>
+                <a href="<%= report.url %>"><img src="<%= report.picture_url %>" style="max-width:300px;box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 3px 1px;"></a>
+            </div>
+            <p style="font-weight:normal;margin-top:10px;margin-bottom:20px"><%= report.address %></p>
+            <div style="display:flex">
+                <div style="display:inline-block">
+                    <strong>Rating: </strong><% if (report.average_rating == null) { %>
+                    <span style="font-weight:normal">Not rated</span> <% } else { %> <span style="font-weight:normal"><%= report.average_rating %></span><% } %>
+                    <br><strong>Certified: </strong><% if (report.certified) { %>
+                    <span style="font-weight:normal">Yes</span><% } else { %> <span style="font-weight:normal">No</span><% } %>
+                </div>
+                <div style="display:inline-block;margin-left:30px">
+                    <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Visit Website</button></a>
+                </div>
+            </div>
+        </div>
+    </td>
+<td style="padding:20px">
+    <div style="max-width:450px;background-color:#e6e5e5;border-radius:6px;margin:20px auto;padding:30px;box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px 1px;">
+        <div style="font-size: 20px;text-align:center;margin-bottom:10px">Book Travel Service</div>
+        <form action="/availability" enctype="application/x-www-form-urlencoded" method="POST">
+        <select name="address" style="display:none"><option value="<%= report.address %>"></option></select>
+        <select name="coworklat" style="display:none"><option value="<%= report.lat %>"></option></select>
+        <select name="coworklng" style="display:none"><option value="<%= report.lng %>"></option></select>
+        <select name="userlat" style="display:none"><option id="userlat"></option></select>
+        <select name="userlng" style="display:none"><option id="userlng"></option></select>
+        <label for="passengers">Passenger(s):</label> <select name="Passengers" id="passengers" class="form-control">
+        <option name="passengers" value="1">1</option>
+        <option name="passengers" value="2">2</option>
+        </select>
+        <br>
+        <label for="date">Date of Travel: </label>
+        <select name="date" class="form-control">
+        <option name="date" value="April 4">April 4</option>
+        </select>
+        <br>
+        <button type="submit" class="btn form-control btn-info">Request Service</button>
+        </form>
     </div>
-     
-    <script>
-            function initMap() {
-      
-              var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 5,
-                center: {lat: <%= reports[0].lat %>, lng: <%= reports[0].lng %>}
-              });
-      
-              // Create an array of alphabetical characters used to label the markers.
-              var labels = <%- JSON.stringify(titles) %>;
-              var infoWin = new google.maps.InfoWindow();
-      
-              // Add some markers to the map.
-              // Note: The code uses the JavaScript Array.prototype.map() method to
-              // create an array of markers based on a given "locations" array.
-              // The map() method here has nothing to do with the Google Maps API.
-              var markers = locations.map(function(location, i) {
-                var marker = new google.maps.Marker({
-                    position: location
-                })
-                google.maps.event.addListener(marker, 'click', function(evt) {
-                    infoWin.setContent(location.info);
-                    infoWin.open(map, marker);
-                })
-                return marker;
-              });
-      
-              // Add a marker clusterer to manage the markers.
-              var markerCluster = new MarkerClusterer(map, markers,
-                  {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-            }
-            
-            var locations = [ <% for (let i of reports) { %>
-                {
-                    lat: <%= i.lat %>,
-                    lng: <%= i.lng %>,
-                    info: "<strong> <%= i.name %> </strong> <br> <%- i.address.replace(/[\W_]/g, ' ') %> <br> <a href='<%= i.url %>'> View Website</a>",
-                    maxWidth: 20
-                }, <% } %> ]
-            
-          </script>
-          <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-          </script>
-          <script async defer
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzcJb41FFwvQeK0z_eLQV1RH5v7Ccpys&callback=initMap">
-          </script>
-  </body>
-  </html>
+</td>
+</tr>
+<% } %>
+</tbody>
+</table>
+<% } %>
+
+</div>
+
+<script>
+
+function initMap() {
+
+var map = new google.maps.Map(document.getElementById('map'), {
+zoom: 5,
+center: {lat: <%= reports[0].lat %>, lng: <%= reports[0].lng %>}
+});
+
+// Create an array of alphabetical characters used to label the markers.
+var labels = <%- JSON.stringify(titles) %>;
+var infoWin = new google.maps.InfoWindow();
+
+// Add some markers to the map.
+// Note: The code uses the JavaScript Array.prototype.map() method to
+// create an array of markers based on a given "locations" array.
+// The map() method here has nothing to do with the Google Maps API.
+var markers = locations.map(function(location, i) {
+var marker = new google.maps.Marker({
+position: location
+})
+google.maps.event.addListener(marker, 'click', function(evt) {
+infoWin.setContent(location.info);
+infoWin.open(map, marker);
+})
+return marker;
+});
+
+// Add a marker clusterer to manage the markers.
+var markerCluster = new MarkerClusterer(map, markers,
+{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+}
+
+var locations = [ <% for (let i of reports) { %>
+{
+lat: <%= i.lat %>,
+lng: <%= i.lng %>,
+info: "<strong> <%= i.name %> </strong> <br> <%- i.address.replace(/[\W_]/g, ' ') %> <br> <a href='<%= i.url %>'> View Website</a>",
+maxWidth: 20
+}, <% } %> ]
+
+</script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzcJb41FFwvQeK0z_eLQV1RH5v7Ccpys&callback=initMap">
+</script>
+</body>
+</html>

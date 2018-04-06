@@ -3,11 +3,13 @@ const path = require('path')
 var request = require('request')
 var _ = require('lodash')
 const ejsLint = require('ejs-lint')
-var formidable = require('formidable')
+const bodyparser=require('body-parser');
 const PORT = process.env.PORT || 5000;
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
+  .use(bodyparser.json())
+  .use(bodyparser.urlencoded({extended:true}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', function (req, res) {
@@ -54,9 +56,30 @@ express()
 
   })
   .post('/availability', function (req, res) {
-    var form = new formidable.IncomingForm();
-    form.parse(req);
-    console.log('form: ', form);
+    console.log('req.body: ', req.body);
+
+    var passengers, coworklat, coworklng, date, useraddress, userzipcode; 
+
+    if(req.body.Passengers > 0) {
+      passengers = req.body.Passengers
+    } else passengers = "1";
+
+    if(req.body.coworklat > 0) {
+      coworklat = req.body.coworklat
+    } else coworklat = "33.9811714";
+
+    if(req.body.coworklng > 0) {
+      coworklng = req.body.coworklng
+    } else coworklng = "-118.4157892";
+
+    if(req.body.useraddress > 0) {
+      useraddress = req.body.useraddress;
+    } else useraddress = "1875 Century Park East"
+
+    if(req.body.userzipcode.length > 0) {
+      userzipcode = req.body.zipcode;
+    } else userzipcode = "90067"
+
     var options = {
       url: 'https://sgrdapi.linksrez.net/api/v1/Ground/Availability',
       headers: {
@@ -67,7 +90,7 @@ express()
       body: JSON.stringify({
           "Passengers": [
               {
-                  "Quantity": 2,
+                  "Quantity": passengers,
                   "Category": {
                       "Value": "Adult"
                   }
@@ -84,13 +107,9 @@ express()
                           "Value": "HomeResidence"
                       },
                       "StateProv": {
-                          "StateCode": "AZ"
                       },
                       "CountryName": {
-                          "Code": "US"
-                      },
-                      "Latitude": "33.475609",
-                      "Longitude": "-112.188570"
+                      }
                   }
               },
               "Dropoff": {
@@ -107,8 +126,8 @@ express()
                       "CountryName": {
                           "Code": "US"
                       },
-                      "Latitude": "33.475609",
-                      "Longitude": "-112.188570"
+                      "Latitude": coworklat,
+                      "Longitude": coworklng
                   }
               }
           }
