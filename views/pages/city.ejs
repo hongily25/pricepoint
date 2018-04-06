@@ -3,7 +3,12 @@
 <head>
 <% include ../partials/header.ejs %>
 </head>
-
+<script>
+$(function(){
+    var date = new Date();
+    $('.datetimepicker-input').val(date.toLocaleDateString());
+})
+</script>
 <body>
 <% include ../partials/masthead.ejs %>
 
@@ -53,7 +58,7 @@
         <br>
         <label for="date">Date of Travel: </label>
         <div name="date" class='input-group date' id='datetimepicker1'>
-                    <input name="date" type='text' class="form-control" placeholder="04/12/2018 9:48 PM" />
+                    <input name="date" type='text' class="form-control datetimepicker-input" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -75,19 +80,10 @@
 
 function initMap() {
 
-<% if (reports != undefined) { %>
 var map = new google.maps.Map(document.getElementById('map'), {
 zoom: 5,
 center: {lat: <%= firstLat %>, lng: <%= firstLng %>}
 });
-<% } else { %>
-
-var map = new google.maps.Map(document.getElementById('map'), {
-zoom: 5,
-center: {lat: 0, lng: 0}
-});
-
-<% } %>
 
 // Create an array of alphabetical characters used to label the markers.
 var labels = <%- JSON.stringify(titles) %>;

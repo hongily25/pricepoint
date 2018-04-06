@@ -51,7 +51,7 @@ express()
         }
         var locations = _.map(spaces, makeCoords);
 
-        //console.log(locations);
+        console.log(spaces);
         var names = _.map(spaces, 'name');
         var msgCity = req.query.city;
         return res.render('pages/city', { reports: spaces, firstLat: spaces[0].lat, firstLng: spaces[0].lng, coords: locations, titles: names, msg: msgCity});
@@ -177,7 +177,7 @@ express()
         var vehicleTypeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.VehicleType.Code;
 
         
-        return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
+        return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, passengerCount: req.body.Passengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
       } else {
         return res.send(error);
       }
