@@ -80,3 +80,23 @@ form {
   font-size: 36px;
 }
 
+.map-index {
+  text-align: left;
+  background-color: rgba(255,255,255,.5);
+}
+
+.map-index > div:first-child {
+  padding: 5px 10px;
+  margin-bottom: 5px;
+}
+
+.map-index > a,
+.map-index > a:hover,
+.map-index > a:active,
+.map-index > a:visited
+ {
+  color: #333;
+  text-decoration: none;
+  display: block;
+  margin: 2px 15px;
+}

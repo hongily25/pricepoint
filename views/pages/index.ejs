@@ -3,63 +3,39 @@
 
 <head>
   <% include ../partials/header.ejs %>
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzcJb41FFwvQeK0z_eLQV1RH5v7Ccpys&callback=initMap">
-  </script>
-  <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-  </script>
-
-<script>
-
-function initMap() {
-
-  var map = new google.maps.Map(document.getElementById('indexMap'), {
-zoom: 5,
-center: {lat: 33.475609, lng: -112.188570}
-});
-
-// Create an array of alphabetical characters used to label the markers.
-var labels = 'Hello world';
-var infoWin = new google.maps.InfoWindow();
-
-// Add some markers to the map.
-// Note: The code uses the JavaScript Array.prototype.map() method to
-// create an array of markers based on a given "locations" array.
-// The map() method here has nothing to do with the Google Maps API.
-var markers = locations.map(function(location, i) {
-var marker = new google.maps.Marker({
-position: location
-})
-google.maps.event.addListener(marker, 'click', function(evt) {
-infoWin.setContent(location.info);
-infoWin.open(map, marker);
-})
-return marker;
-});
-
-// Add a marker clusterer to manage the markers.
-var markerCluster = new MarkerClusterer(map, markers,
-{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-}
-
-var locations = [
-{
-lat: 33.475609,
-lng: -112.188570,
-info: "<a href='/'> View Website</a>",
-maxWidth: 20
-}]
-
-</script>
-
 </head>
 
 <body>
   <% include ../partials/masthead.ejs %>
     <div class="row">
       <br>
-      <div class="container">
-        <div id="indexMap"></div>
+      <div class="container" style="text-align:center;position:relative">
+        <div class="map-index" style="position:absolute;top:60px;left:240px">
+          <div style="background-color:#333;color:#FFF">NORTH AMERICA</div>
+          <a href="/?city=Austin">Austin</a>
+          <a href="/?city=Dallas">Dallas</a>
+          <a href="/?city=Las+Vegas">Las Vegas</a>
+          <a href="/?city=Los+Angeles">Los Angeles</a>
+          <a href="/?city=New+York+City">New York City</a>
+          <a href="/?city=San+Francisco">San Francisco</a>
+          <a href="/?city=San+Jose">San Jose</a>
+        </div>
+        <div class="map-index" style="position:absolute;top:300px;left:340px">
+          <div style="background-color:#333;color:#FFF">SOUTH AMERICA</div>
+          <a href="/?city=Bogota">Bogota</a>
+          <a href="/?city=Lima">Lima</a>
+          <a href="/?city=Santiago">Santiago</a>
+          <a href="/?city=Sao+Paulo">Sao+Paulo</a>
+          <a href="/?city=Rio+de+Janeiro">Rio de Janeiro</a>
+        </div>
+        <div class="map-index" style="position:absolute;top:220px;left:540px">
+          <div style="background-color:#333;color:#FFF">AFRICA</div>
+          <a href="/?city=Cairo">Cairo</a>
+          <a href="/?city=Cape+Town">Cape Town</a>
+          <a href="/?city=Johannesburg">Johannesburg</a>
+          <a href="/?city=Lagos">Lagos</a>
+        </div>
+        <img src="/images/contact-map.png">
       </div>
 
 
