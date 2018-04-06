@@ -40,7 +40,7 @@
 <td style="padding:20px">
     <div style="max-width:450px;background-color:#e6e5e5;border-radius:6px;margin:20px auto;padding:30px;box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px 1px;">
         <div style="font-size: 20px;text-align:center;margin-bottom:10px">Book Travel Service</div>
-        <form action="/availability?city=Los+Angeles" enctype="application/x-www-form-urlencoded" method="POST">
+        <form action="/availability?city=<%= msg %>" enctype="application/x-www-form-urlencoded" method="POST">
         <select name="address" style="display:none"><option value="<%= report.address %>"></option></select>
         <select name="coworklat" style="display:none"><option value="<%= report.lat %>"></option></select>
         <select name="coworklng" style="display:none"><option value="<%= report.lng %>"></option></select>
@@ -75,10 +75,19 @@
 
 function initMap() {
 
+<% if (reports != undefined) { %>
 var map = new google.maps.Map(document.getElementById('map'), {
 zoom: 5,
-center: {lat: <%= reports[0].lat %>, lng: <%= reports[0].lng %>}
+center: {lat: <%= firstLat %>, lng: <%= firstLng %>}
 });
+<% } else { %>
+
+var map = new google.maps.Map(document.getElementById('map'), {
+zoom: 5,
+center: {lat: 0, lng: 0}
+});
+
+<% } %>
 
 // Create an array of alphabetical characters used to label the markers.
 var labels = <%- JSON.stringify(titles) %>;

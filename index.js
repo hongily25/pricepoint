@@ -16,7 +16,7 @@ express()
     var city = 'Lisbon';
 
     if (req.query.city == null) {
-        res.render('pages/index', { reports: [] })
+        return res.render('pages/index', { reports: [] })
     } else {
         city = req.query.city;
     }
@@ -35,8 +35,14 @@ express()
         var info = JSON.parse(body);
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
-        if (info.results == null) {
-            res.render('pages/no-results');
+        if (info == null) {
+            console.log('info.results.length', info.results);
+            return res.render('pages/no-results');
+        } 
+        if (info.length < 1) {
+            console.log('city', req.body.city);
+            console.log('info.results.length', info.results);
+            return res.render('pages/no-results');
         }
         var spaces = info.results;
         
@@ -47,9 +53,10 @@ express()
 
         //console.log(locations);
         var names = _.map(spaces, 'name');
-        res.render('pages/city', { reports: spaces, coords: locations, titles: names});
+        var msgCity = req.query.city;
+        return res.render('pages/city', { reports: spaces, firstLat: spaces[0].lat, firstLng: spaces[0].lng, coords: locations, titles: names, msg: msgCity});
       } else {
-          res.send('err')
+          return res.send('err')
       }
     }
     request(options, callback); 
@@ -127,8 +134,8 @@ express()
                       "CountryName": {
                           "Code": "US"
                       },
-                      "Latitude": coworklat,
-                      "Longitude": coworklng
+                      "Latitude": "33.475609",
+                      "Longitude": "-112.188570"
                   }
               }
           }
@@ -170,9 +177,9 @@ express()
         var vehicleTypeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.VehicleType.Code;
 
         
-        res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
+        return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
       } else {
-        res.send(error);
+        return res.send(error);
       }
     }
     );
