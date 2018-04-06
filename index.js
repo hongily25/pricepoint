@@ -147,7 +147,15 @@ express()
     request.post(options, function callback(error, response, body) {
 
       if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
+        var info; 
+        
+        try {
+            info = JSON.parse(body);
+        } catch(error) {
+            return res.send('error :(')
+        }
+        
+        
         var img = "https:" + info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.ImageURL;
         console.log('this is my info. ', img);
         var rideInfo = info.data.SuperShuttle[0].RateQualifiers[0].RateQualifierValue;
