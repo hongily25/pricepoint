@@ -35,6 +35,13 @@ express()
         var info = JSON.parse(body);
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
+
+        try {
+            var latExists = spaces[0].lat
+        } catch(error) {
+            return res.render('pages/no-results')
+        }
+
         if (info == null) {
             console.log('info.results.length', info.results);
             return res.render('pages/no-results');
@@ -152,7 +159,7 @@ express()
         try {
             var superShuttleExists = info.data.SuperShuttle[0];
         } catch(error) {
-            return res.send('error :(')
+            return res.render('pages/no-results')
         }
         
         
