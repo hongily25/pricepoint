@@ -50,11 +50,11 @@
               <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Reserve Now</button></a>
             </td>
             <td style="padding:20px">
-                <form action="/availability" method="POST">
+                <form action="/availability" enctype="multipart/form-data" method="POST">
                 
                 <label for="passengers">Passengers:</label> <select class="form-control">
                     <option name="passengers" value="1">1</option>
-                    <option  name="passengers" value="2">2</option>
+                    <option name="passengers" value="2">2</option>
                 </select>
                 <label for="date">Date of Travel: </label>
                 <select class="form-control">

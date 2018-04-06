@@ -3,7 +3,8 @@ const path = require('path')
 var request = require('request')
 var _ = require('lodash')
 const ejsLint = require('ejs-lint')
-const PORT = process.env.PORT || 5000
+var formidable = require('formidable')
+const PORT = process.env.PORT || 5000;
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -30,8 +31,8 @@ express()
     function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
-        console.log("Got a GET request for the homepage");
-        console.log('info: ', info.results);
+        //console.log("Got a GET request for the homepage");
+        //console.log('info: ', info.results);
         if (info.results.length < 1) {
             res.render('pages/no-results');
         }
@@ -42,7 +43,7 @@ express()
         }
         var locations = _.map(spaces, makeCoords);
 
-        console.log(locations);
+        //console.log(locations);
         var names = _.map(spaces, 'name');
         res.render('pages/city', { reports: spaces, coords: locations, titles: names});
       } else {
@@ -53,6 +54,9 @@ express()
 
   })
   .post('/availability', function (req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req);
+    console.log('form: ', form);
     var options = {
       url: 'https://sgrdapi.linksrez.net/api/v1/Ground/Availability',
       headers: {
@@ -111,16 +115,18 @@ express()
       })      
     };
 
-    function callback(error, response, body) {
+    
+
+    request.post(options, function callback(error, response, body) {
+
       if (!error && response.statusCode == 200) {
-        var info = JSON.parse(req.body);
+        var info = JSON.parse(body);
         res.send(info);
       } else {
         res.send(error);
       }
     }
-
-    request.post(options, callback);
+    );
 
 
   })
