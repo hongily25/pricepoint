@@ -35,7 +35,8 @@ express()
         var info = JSON.parse(body);
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
-
+        var spaces = info.results;
+        
         try {
             var latExists = spaces[0].lat
         } catch(error) {
@@ -50,8 +51,7 @@ express()
             console.log('city', req.body.city);
             console.log('info.results.length', info.results);
             return res.render('pages/no-results');
-        }
-        var spaces = info.results;
+        } 
         
         function makeCoords(n) {
             return { lat: n.lat, lng: n.lng, info: n.name }
@@ -153,6 +153,7 @@ express()
 
     request.post(options, function callback(error, response, body) {
 
+        /*
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         
@@ -191,13 +192,31 @@ express()
 
         var vehicleTypeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.VehicleType.Code;
 
+        img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
+        rideInfo = "SuperShuttle";
+        startDateRideInfo = "April 12 at 11:00 PM";
+        costInfo = 100;
+        maxPassengers = 7;
+        descInfo = "Non-Stop Ride";
+        vehicleTypeInfo = "BLUE V";
+
         
         return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, passengerCount: req.body.Passengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
       } else {
         return res.send(error);
-      }
-    }
-    );
+      } */
+
+        var img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
+        var rideInfo = "SuperShuttle";
+        var startDateRideInfo = "April 12 at 11:00 PM";
+        var costInfo = 100;
+        var maxPassengers = 7;
+        var descInfo = "Non-Stop Ride";
+        var vehicleTypeInfo = "BLUE V";
+
+      return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, passengerCount: req.body.Passengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
+
+    });
 
 
   })
