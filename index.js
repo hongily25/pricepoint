@@ -36,7 +36,7 @@ express()
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
         var spaces = info.results;
-        
+
         try {
             var latExists = spaces[0].lat
         } catch(error) {
@@ -58,7 +58,7 @@ express()
         }
         var locations = _.map(spaces, makeCoords);
 
-        console.log(spaces);
+        //console.log(spaces);
         var names = _.map(spaces, 'name');
         var msgCity = req.query.city;
         return res.render('pages/city', { reports: spaces, firstLat: spaces[0].lat, firstLng: spaces[0].lng, coords: locations, titles: names, msg: msgCity});
@@ -73,7 +73,9 @@ express()
     //console.log('req.body: ', req.body);
     console.log('req.query.city', req.query.city);
 
-    var passengers, coworklat, coworklng, date, useraddress, userzipcode; 
+    var passengers, coworklat, coworklng, date, useraddress, userzipcode, date; 
+
+    console.log('req.body.date', req.body.date);
 
     if(req.body.Passengers) {
       passengers = req.body.Passengers
@@ -95,6 +97,25 @@ express()
       userzipcode = req.body.zipcode;
     } else userzipcode = "90067"
 
+    if(req.body.date != null) {
+        date = req.body.date;
+    } else date = ""
+
+    var startDate = date.split(' ');
+
+    if (startDate.length < 2) {
+        startDate[1] = "11:00 PM"
+    }
+
+    var coworkingaddress = req.body.address.split(',');
+    console.log('coworking address', coworkingaddress);
+
+    var coworkingZipcode = coworkingaddress[2].replace(/\D/g,'');
+    console.log('coworkingZipcode: ', coworkingZipcode);
+
+    var coworkingState = coworkingaddress[2].split(' ');
+    
+
     var options = {
       url: 'https://sgrdapi.linksrez.net/api/v1/Ground/Availability',
       headers: {
@@ -115,40 +136,43 @@ express()
               "Pickup": {
                   "DateTime": "04/12/2018 11:00 PM",
                   "Address": {
-                      "AddressLine": "2543 N. 60th Ave",
-                      "CityName": "Phoenix",
-                      "PostalCode": "85035",
+                      "AddressLine": useraddress.address,
+                      "CityName": req.query.city,
+                      "PostalCode": useraddress.zipcode,
                       "LocationType": {
                           "Value": "HomeResidence"
                       },
                       "StateProv": {
+                        "StateCode": useraddress.StateCode
                       },
                       "CountryName": {
+                        "Code": useraddress.CountryName
                       }
                   }
               },
               "Dropoff": {
                   "Address": {
-                      "AddressLine": "2543 N. 60th Ave",
-                      "CityName": "Phoenix",
-                      "PostalCode": "85035",
+                      "AddressLine": coworkingaddress[0],
+                      "CityName": req.body.city,
+                      "PostalCode": coworkingZipcode,
                       "LocationType": {
                           "Value": "HomeResidence"
                       },
                       "StateProv": {
-                          "StateCode": "AZ"
+                          "StateCode": coworkingState[0]
                       },
                       "CountryName": {
-                          "Code": "US"
+                          "Code": coworkingaddress[3]
                       },
-                      "Latitude": "33.475609",
-                      "Longitude": "-112.188570"
+                      "Latitude": coworklat,
+                      "Longitude": coworklng
                   }
               }
           }
       })      
     };
 
+    console.log('options.body ', options.body);
     
 
     request.post(options, function callback(error, response, body) {
@@ -205,10 +229,11 @@ express()
       } else {
         return res.send(error);
       } */
+      
 
         var img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
         var rideInfo = "SuperShuttle";
-        var startDateRideInfo = "April 12 at 11:00 PM";
+        var startDateRideInfo = startDate[0] + " at " + startDate[1];
         var costInfo = 100;
         var maxPassengers = 7;
         var descInfo = "Non-Stop Ride";
