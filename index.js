@@ -104,7 +104,8 @@ express()
     var startDate = date.split(' ');
 
     if (startDate.length < 2) {
-        startDate[1] = "11:00 PM"
+        startDate[1] = "11:00";
+        startDate[2] = "PM";
     }
 
     var coworkingaddress = req.body.address.split(',');
@@ -233,7 +234,7 @@ express()
 
         var img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
         var rideInfo = "SuperShuttle";
-        var startDateRideInfo = startDate[0] + " at " + startDate[1];
+        var startDateRideInfo = startDate[0] + " at " + startDate[1] + " " + startDate[2];
         var costInfo = 100;
         var maxPassengers = 7;
         var descInfo = "Non-Stop Ride";
