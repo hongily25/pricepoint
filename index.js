@@ -141,15 +141,30 @@ express()
     /* If it doesn't have a date, add a default one */
     if (startDate.length < 2) {
         startDate[1] = "11:00";
-        startDate[2] = "PM";
+        startDate[2] = "AM";
     }
 
     request('https://google.com', function callback(error, response, body) {
 
-      return res.render('pages/ride-service', {city: req.query.city})
+      return res.render('pages/ride-service', {city: req.query.city, day: startDate[0], hour: startDate[1], amPm: startDate[2]})
 
     });
+  })
+  .get('/thank-you', function (req, res) {
+    if(req.body.date != null) {
+        let date = req.body.date;
+    } else date = "";
 
+    console.log('date: ', date);
 
+    var startDate = date.split(' ');
+
+    /* If it doesn't have a date, add a default one */
+    if (startDate.length < 2) {
+        startDate[1] = "12:00";
+        startDate[2] = "PM.";
+    }
+
+      return res.render('pages/ride-service', {city: 'Los Angeles', day: 'August 2', hour: startDate[1], amPm: startDate[2]})
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))

@@ -13,8 +13,8 @@ a:hover {
 }
 
 body {
-  background-image: url('/images/bg2.jpg');
-  background-size: cover;
+  background: #ECE9E6;  /* fallback for old browsers */
+  background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
 }
 
 table {
@@ -47,7 +47,7 @@ tbody>tr>td {
 
 #header {
   height: 70px;
-  background-color: #46b8da;
+  background-color: darkseagreen;
   width: 100%;
   box-shadow: rgba(0, 0, 0, 0.4) 1px 1px 2px 0px;
 }
@@ -99,4 +99,20 @@ form {
   text-decoration: none;
   display: block;
   margin: 2px 15px;
+}
+
+.investing-table {
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.investing-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.investing-table h4 {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 0;
 }

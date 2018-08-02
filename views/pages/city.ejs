@@ -46,7 +46,6 @@ $(function(){
         <select name="coworklng" style="display:none"><option value="<%= report.lng %>"></option></select>
         <label for="passengers">Financial Planner:</label> <select name="Passengers" id="passengers" class="form-control">
         <option name="passengers" value="1">George McKinney</option>
-        <option name="passengers" value="2">Emily Lam</option>
         </select>
         <br>
         <label for="date">Date: </label>
@@ -57,7 +56,16 @@ $(function(){
                     </span>
         </div>
         <br>
-        <button type="submit" class="btn form-control btn-info">Request Service</button>
+        <label for="date">Price: </label>
+        <div class='input-group' style="text-align:center; margin: 0 auto">
+                    <s>$79.99</s> <strong style="margin-left:10px">$39.99</strong>
+        </div>
+        <br>
+        <img alt="Visa Checkout" class="v-button" role="button"
+        src="https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png"/>
+     <script type="text/javascript"
+        src="https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js">
+     </script>
         </form>
     </div>
 </td>
