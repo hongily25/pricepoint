@@ -22,7 +22,7 @@ express()
     }
 
     var options = {
-      url: 'https://coworkingmap.org/wp-json/spaces/united-states/' + city,
+      url: 'https://coworkingmap.org/wp-json/spaces/' + req.query.country + '/' + city,
       headers: {
         'User-Agent': 'request',
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ express()
             for (let i = 0; i < array.length; i++) {
                 // Header
                 coworkOptions[i] = {
-                    url: 'https://coworkingmap.org/wp-json/spaces/united-states/' + req.query.city + '/' + array[i].slug,
+                    url: 'https://coworkingmap.org/wp-json/spaces/' + req.query.country + '/' + req.query.city + '/' + array[i].slug,
                     headers: {
                     'User-Agent': 'request',
                     'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ express()
 
         return res.render('pages/city', { reports: arrayOfSpaces, firstLat: spaces[0].map.lat, firstLng: spaces[0].map.lng, coords: locations, titles: names, msg: msgCity});
       } else {
-          return res.send('err')
+          return res.send('Sorry there was an error.')
       }
     }
 
