@@ -102,7 +102,7 @@ express()
 
         return res.render('pages/city', { reports: arrayOfSpaces, firstLat: spaces[0].map.lat, firstLng: spaces[0].map.lng, coords: locations, titles: names, msg: msgCity});
       } else {
-          return res.send('Sorry there was an error.')
+          return res.send('Sorry there was an error. Please try refreshing the page.')
       }
     }
 
