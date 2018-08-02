@@ -18,10 +18,10 @@
     "formidable": "^1.2.1",
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
-    "request": "^2.85.0"
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "request": "^2.81.0",
+    "request": "^2.87.0",
     "tape": "^4.7.0"
   },
   "repository": {

@@ -2,9 +2,9 @@ const express = require('express')
 const path = require('path')
 var request = require('request')
 var _ = require('lodash')
-const ejsLint = require('ejs-lint')
 const bodyparser=require('body-parser');
 const PORT = process.env.PORT || 5000;
+var rp = require('request-promise');
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -12,8 +12,8 @@ express()
   .use(bodyparser.urlencoded({extended:true}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/', function (req, res) {
-    var city = 'Lisbon';
+  .get('/', async function (req, res) {
+    var city = 'Chicago';
 
     if (req.query.city == null) {
         return res.render('pages/index', { reports: [] })
@@ -22,58 +22,98 @@ express()
     }
 
     var options = {
-      url: 'https://card4b-masai-masai-coworkingcoffee-stg-v1.p.mashape.com/coworkingspace/api/discovery/getCoWorkingSpaces?City=' + city,
+      url: 'https://coworkingmap.org/wp-json/spaces/united-states/' + city,
       headers: {
         'User-Agent': 'request',
         'Content-Type': 'application/json',
-        'X-Mashape-Key': 'ShedIfdxswmsh7n7BWdKbLix2oxep1oKrryjsnl9MPWgR9vWwa'
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY293b3JraW5nbWFwLm9yZyIsImlhdCI6MTUzMzE3ODMzMSwibmJmIjoxNTMzMTc4MzMxLCJleHAiOjE1MzM3ODMxMzEsImRhdGEiOnsidXNlciI6eyJpZCI6IjI2ODAifX19.XBOqo71M_k7x5itcb28Vv0a4V0hk3ePYsGUsDq6gyZI'
       }
     };
 
-    function callback(error, response, body) {
+    async function callback(error, response, body) {
       if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         //console.log("Got a GET request for the homepage");
         //console.log('info: ', info.results);
-        var spaces = info.results;
+        var spaces = info;
 
         try {
-            var latExists = spaces[0].lat
+            var latExists = spaces[0].map.lat
         } catch(error) {
             return res.render('pages/no-results')
         }
 
-        if (info == null) {
-            console.log('info.results.length', info.results);
+        if (spaces == null) {
             return res.render('pages/no-results');
         } 
-        if (info.length < 1) {
+        if (spaces.length < 1) {
             console.log('city', req.body.city);
-            console.log('info.results.length', info.results);
             return res.render('pages/no-results');
         } 
         
         function makeCoords(n) {
-            return { lat: n.lat, lng: n.lng, info: n.name }
+            return { lat: n.map.lat, lng: n.map.lng, info: n.name }
         }
         var locations = _.map(spaces, makeCoords);
+
+        async function makeSpaces(array) {
+            
+            var coworkOptions = [];
+            var arrOfPromises = [];
+
+            for (let i = 0; i < array.length; i++) {
+                // Header
+                coworkOptions[i] = {
+                    url: 'https://coworkingmap.org/wp-json/spaces/united-states/' + req.query.city + '/' + array[i].slug,
+                    headers: {
+                    'User-Agent': 'request',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY293b3JraW5nbWFwLm9yZyIsImlhdCI6MTUzMzE3ODMzMSwibmJmIjoxNTMzMTc4MzMxLCJleHAiOjE1MzM3ODMxMzEsImRhdGEiOnsidXNlciI6eyJpZCI6IjI2ODAifX19.XBOqo71M_k7x5itcb28Vv0a4V0hk3ePYsGUsDq6gyZI'
+                    },
+                    json: true
+                };
+
+                arrOfPromises[i] = rp(coworkOptions[i]);
+            }
+
+            var someArray = await Promise.all(
+                arrOfPromises
+            ).then(function coworkCallback(body) {
+                var items = body;
+                //console.log('body: ', body);
+                for (let i = 0; i < items.length; i++) {
+                    if (!items[i].site.includes("https")) {
+                        items[i].site = "https://" + items[i].site;
+                    }
+                }
+                return items;
+            });
+
+            return someArray;
+        }
 
         //console.log(spaces);
         var names = _.map(spaces, 'name');
         var msgCity = req.query.city;
-        return res.render('pages/city', { reports: spaces, firstLat: spaces[0].lat, firstLng: spaces[0].lng, coords: locations, titles: names, msg: msgCity});
+
+        // Given an array of spaces in a city, return an array of coworking spaces
+        let arrayOfSpaces = await makeSpaces(spaces);
+        //console.log('arrayOfSpaces: ', arrayOfSpaces);
+
+        return res.render('pages/city', { reports: arrayOfSpaces, firstLat: spaces[0].map.lat, firstLng: spaces[0].map.lng, coords: locations, titles: names, msg: msgCity});
       } else {
           return res.send('err')
       }
     }
-    request(options, callback); 
+
+    await request(options, callback); 
 
   })
   .post('/availability', function (req, res) {
     //console.log('req.body: ', req.body);
     console.log('req.query.city', req.query.city);
 
-    var passengers, coworklat, coworklng, date, useraddress, userzipcode, date; 
+    var date ; 
 
     console.log('req.body.date', req.body.date);
 
@@ -89,158 +129,24 @@ express()
       coworklng = req.body.coworklng
     } else coworklng = "-118.4157892";
 
-    if(req.body.useraddress) {
-      useraddress = req.body.useraddress;
-    } else useraddress = "1875 Century Park East"
-
-    if(req.body.userzipcode) {
-      userzipcode = req.body.zipcode;
-    } else userzipcode = "90067"
-
     if(req.body.date != null) {
         date = req.body.date;
     } else date = ""
 
+    /* split date into array of substrings. ie 04/23/18 11:00 PM to 
+    ['04/23/18', '11:00', 'PM']
+    */
     var startDate = date.split(' ');
 
+    /* If it doesn't have a date, add a default one */
     if (startDate.length < 2) {
         startDate[1] = "11:00";
         startDate[2] = "PM";
     }
 
-    var coworkingaddress = req.body.address.split(',');
-    console.log('coworking address', coworkingaddress);
+    request('https://google.com', function callback(error, response, body) {
 
-    var coworkingZipcode = coworkingaddress[2].replace(/\D/g,'');
-    console.log('coworkingZipcode: ', coworkingZipcode);
-
-    var coworkingState = coworkingaddress[2].split(' ');
-    
-
-    var options = {
-      url: 'https://sgrdapi.linksrez.net/api/v1/Ground/Availability',
-      headers: {
-        'Content-Type': 'application/json',
-        'Username': 'sandbox',
-        'Password': 'sandbox'
-      },
-      body: JSON.stringify({
-          "Passengers": [
-              {
-                  "Quantity": passengers,
-                  "Category": {
-                      "Value": "Adult"
-                  }
-              }
-          ],
-          "Service": {
-              "Pickup": {
-                  "DateTime": "04/12/2018 11:00 PM",
-                  "Address": {
-                      "AddressLine": useraddress.address,
-                      "CityName": req.query.city,
-                      "PostalCode": useraddress.zipcode,
-                      "LocationType": {
-                          "Value": "HomeResidence"
-                      },
-                      "StateProv": {
-                        "StateCode": useraddress.StateCode
-                      },
-                      "CountryName": {
-                        "Code": useraddress.CountryName
-                      }
-                  }
-              },
-              "Dropoff": {
-                  "Address": {
-                      "AddressLine": coworkingaddress[0],
-                      "CityName": req.body.city,
-                      "PostalCode": coworkingZipcode,
-                      "LocationType": {
-                          "Value": "HomeResidence"
-                      },
-                      "StateProv": {
-                          "StateCode": coworkingState[0]
-                      },
-                      "CountryName": {
-                          "Code": coworkingaddress[3]
-                      },
-                      "Latitude": coworklat,
-                      "Longitude": coworklng
-                  }
-              }
-          }
-      })      
-    };
-
-    console.log('options.body ', options.body);
-    
-
-    request.post(options, function callback(error, response, body) {
-
-        /*
-      if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
-        
-        try {
-            var superShuttleExists = info.data.SuperShuttle[0];
-        } catch(error) {
-            return res.render('pages/no-results')
-        }
-        
-        
-        var img = "https:" + info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.ImageURL;
-        console.log('this is my info. ', img);
-        var rideInfo = info.data.SuperShuttle[0].RateQualifiers[0].RateQualifierValue;
-
-        var startDateRideInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.PickupTimes.PickupTimes[0].StartDateTime;
-
-        var startDateRideInfoArray = Array.from(startDateRideInfo);
-        startDateRideInfoArray.splice(9, 0, ' at ');
-
-        startDateRideInfoArray.splice(13, 3, '');
-
-        startDateRideInfoArray.splice(16, 0, ' ');
-        startDateRideInfo = startDateRideInfoArray.join('');
-
-        var costInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].TotalCharge.EstimatedTotalAmount;
-
-        var descInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].RateQualifier.Category.Description;
-
-        var descInfoArray = Array.from(descInfo);
-        descInfoArray.splice(8, 0, ' ');
-        descInfo = descInfoArray.join('');
-
-        var maxPassengers = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Reference.TPA_Extensions.MaxPassengers;
-
-        var serviceLevelCodeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.ServiceLevel.Code;
-
-        var vehicleTypeInfo = info.data.SuperShuttle[0].GroundServices.GroundServices[0].Service.VehicleType.Code;
-
-        img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
-        rideInfo = "SuperShuttle";
-        startDateRideInfo = "April 12 at 11:00 PM";
-        costInfo = 100;
-        maxPassengers = 7;
-        descInfo = "Non-Stop Ride";
-        vehicleTypeInfo = "BLUE V";
-
-        
-        return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, passengerCount: req.body.Passengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
-      } else {
-        return res.send(error);
-      } */
-      
-
-        var img = "https://cdn.supershuttle.com/service/2/20151118RS5072312.jpg";
-        var rideInfo = "SuperShuttle";
-        var startDateRideInfo = startDate[0] + " at " + startDate[1] + " " + startDate[2];
-        var costInfo = 100;
-        var maxPassengers = 7;
-        var descInfo = "Non-Stop Ride";
-        var vehicleTypeInfo = "BLUE V";
-
-      return res.render('pages/ride-service', {imgURL: img, rideService: rideInfo, startDateRide: startDateRideInfo, cost: costInfo, max: maxPassengers, passengerCount: req.body.Passengers, desc: descInfo, vehicleType: vehicleTypeInfo, city: req.query.city})
+      return res.render('pages/ride-service', {city: req.query.city})
 
     });
 

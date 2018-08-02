@@ -11,12 +11,12 @@ $(function(){
 </script>
 <body>
 <% include ../partials/masthead.ejs %>
-
 <div class="container">
     <br><br>
     <div id="map"></div>
     <br><br>
 <% if (reports != undefined) { %>
+
 <table class="table">
     <tbody>
     <% for (let report of reports) { %>
@@ -26,35 +26,30 @@ $(function(){
             <div class="title-and-img" style="max-width:300px">
                 <div class="coworking-title" style="font-size: 20px;text-align:center;margin-bottom:10px"><%= report.name %>
                 </div>
-                <a href="<%= report.url %>"><img src="<%= report.picture_url %>" style="max-width:300px;box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 3px 1px;"></a>
+                <a href="<%= report.site %>"><img src="<%= report.logo %>" style="max-width:300px;box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 3px 1px;"></a>
             </div>
-            <p style="font-weight:normal;margin-top:10px;margin-bottom:20px"><%= report.address %></p>
-            <div style="display:flex">
-                <div style="display:inline-block">
-                    <strong>Rating: </strong><% if (report.average_rating == null) { %>
-                    <span style="font-weight:normal">Not rated</span> <% } else { %> <span style="font-weight:normal"><%= report.average_rating %></span><% } %>
-                    <br><strong>Certified: </strong><% if (report.certified) { %>
-                    <span style="font-weight:normal">Yes</span><% } else { %> <span style="font-weight:normal">No</span><% } %>
-                </div>
-                <div style="display:inline-block;margin-left:30px">
-                    <a href="<%= report.url %>" target="_blank"><button class="btn btn-info">Visit Website</button></a>
+            <p style="font-weight:normal;margin-top:10px;margin-bottom:20px"><%= report.map.address %></p>
+            <div>
+                
+                <div>
+                    <a href="<%= report.site %>" target="_blank"><button class="btn btn-info">Visit Website</button></a>
                 </div>
             </div>
         </div>
     </td>
 <td style="padding:20px">
     <div style="max-width:450px;background-color:#e6e5e5;border-radius:6px;margin:20px auto;padding:30px;box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px 1px;">
-        <div style="font-size: 20px;text-align:center;margin-bottom:10px">Book Travel Service</div>
+        <div style="font-size: 20px;text-align:center;margin-bottom:10px">Schedule a Meeting</div>
         <form action="/availability?city=<%= msg %>" enctype="application/x-www-form-urlencoded" method="POST">
         <select name="address" style="display:none"><option value="<%= report.address %>"></option></select>
         <select name="coworklat" style="display:none"><option value="<%= report.lat %>"></option></select>
         <select name="coworklng" style="display:none"><option value="<%= report.lng %>"></option></select>
-        <label for="passengers">Passenger(s):</label> <select name="Passengers" id="passengers" class="form-control">
-        <option name="passengers" value="1">1</option>
-        <option name="passengers" value="2">2</option>
+        <label for="passengers">Financial Planner:</label> <select name="Passengers" id="passengers" class="form-control">
+        <option name="passengers" value="1">George McKinney</option>
+        <option name="passengers" value="2">Emily Lam</option>
         </select>
         <br>
-        <label for="date">Date of Travel: </label>
+        <label for="date">Date: </label>
         <div name="date" class='input-group date datetimepicker' id='datetimepicker1'>
                     <input name="date" type='text' class="form-control datetimepicker-input" />
                     <span class="input-group-addon">
@@ -111,9 +106,9 @@ var markerCluster = new MarkerClusterer(map, markers,
 
 var locations = [ <% for (let i of reports) { %>
 {
-lat: <%= i.lat %>,
-lng: <%= i.lng %>,
-info: "<strong> <%= i.name %> </strong> <br> <%- i.address.replace(/[\W_]/g, ' ') %> <br> <a href='<%= i.url %>'> View Website</a>",
+lat: <%= i.map.lat %>,
+lng: <%= i.map.lng %>,
+info: "<strong> <%= i.name %> </strong> <br> <%- i.map.address.replace(/[\W_]/g, ' ') %> <br> <a href='/'> View Website</a>",
 maxWidth: 20
 }, <% } %> ]
 
