@@ -5,6 +5,7 @@ var _ = require('lodash')
 const bodyparser=require('body-parser');
 const PORT = process.env.PORT || 5000;
 var rp = require('request-promise');
+const godDamnToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY293b3JraW5nbWFwLm9yZyIsImlhdCI6MTUzNjMwNDcxNCwibmJmIjoxNTM2MzA0NzE0LCJleHAiOjE1MzY5MDk1MTQsImRhdGEiOnsidXNlciI6eyJpZCI6IjI3MTUifX19.i-l8Lm2C_tXYT6vMjhBp6Q6br9YYyoI9Y1fN4mgDILk';
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -26,8 +27,8 @@ express()
       headers: {
         'User-Agent': 'request',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY293b3JraW5nbWFwLm9yZyIsImlhdCI6MTUzMzE3ODMzMSwibmJmIjoxNTMzMTc4MzMxLCJleHAiOjE1MzM3ODMxMzEsImRhdGEiOnsidXNlciI6eyJpZCI6IjI2ODAifX19.XBOqo71M_k7x5itcb28Vv0a4V0hk3ePYsGUsDq6gyZI'
-      }
+        'Authorization': godDamnToken,
+        }
     };
 
     async function callback(error, response, body) {
@@ -68,7 +69,7 @@ express()
                     headers: {
                     'User-Agent': 'request',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY293b3JraW5nbWFwLm9yZyIsImlhdCI6MTUzMzE3ODMzMSwibmJmIjoxNTMzMTc4MzMxLCJleHAiOjE1MzM3ODMxMzEsImRhdGEiOnsidXNlciI6eyJpZCI6IjI2ODAifX19.XBOqo71M_k7x5itcb28Vv0a4V0hk3ePYsGUsDq6gyZI'
+                    'Authorization': godDamnToken
                     },
                     json: true
                 };
